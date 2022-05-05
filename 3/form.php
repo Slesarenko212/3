@@ -76,7 +76,7 @@
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input form-check-custom-bg" type="radio" value="3" name="userLimbs" id="userGodrik">
-                                <label class="form-check-label" for="userGodrik">
+                                <label class="form-check-label" for="userMany">
                                     Есть запасные
                                 </label>
                             </div>
