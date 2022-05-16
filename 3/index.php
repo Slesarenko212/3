@@ -1,144 +1,111 @@
 <?php
-
-function goBack(){
-    print('<div style="color:#dc3555; background-color:#212530;">Неверно введены суперспособности </div>');
-    include('form.php');
-    exit();
-}
-
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
 header('Content-Type: text/html; charset=UTF-8');
 
-if($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (!empty($_GET['save'])) {
-        print('<div style="color:#198759; background-color:#212530;">Данные успешно сохранены! </div>');
+        print('Спасибо, форма сохранена.');
     }
-    include('form.php');
+    include('form.html');
     exit();
-}else {
-    $errors = FALSE;
-    $errors_string = array();
-    for($i=0; $i<9; $i++){
-        $errors_string[$i]='';
-    }
-
-    if (empty($_POST['userName'])) {
-        $errors_string[0] = '<div style="color:#dc3555; background-color:#212530;">Введите Ваше имя </div>';
-        $errors = TRUE;
-    }
-    if (empty($_POST['userEmail'])) {
-        $errors_string[1] = '<div style="color:#dc3555; background-color:#212530;">Введите email </div>';
-        $errors = TRUE;
-    } else if (!preg_match("/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/", $_POST['userEmail'])) {
-        $errors_string[2]='<div style="color:#dc3549; background-color:#212530;">Неверно введён email</div>';
-        $errors = TRUE;
-    }
-    if (empty($_POST['userBirthdate'])) {
-        $errors_string[3]=('<div style="color:#dc3555; background-color:#212530;">Укажите дату рождения</div>');
-        $errors = TRUE;
-    } else if (!preg_match("(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8])))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))", $_POST['userBirthdate'])) {
-        $errors_string[4]=('<div style="color:#dc3555; background-color:#212530;">Неверно указана дата рождения </div>');
-        $errors = TRUE;
-    }
-    if (empty($_POST['userGender'])) {
-        $errors_string[5]=('<div style="color:#dc3555; background-color:#212530;">Укажите Ваш пол </div>');
-        $errors = TRUE;
-    } else if ($_POST['userGender'] != 1 && $_POST['userGender'] != 2) {
-        $errors_string[6]=('<div style="color:#dc3555; background-color:#212530;">Неверно указан пол </div>');
-        $errors = TRUE;
-    }
-
-    if (empty($_POST['userLimbs'])) {
-        $errors_string[7]=('<div style="color:#dc3555; background-color:#212530;">Укажите количество конечностей </div>');
-        $errors = TRUE;
-    } else if ($_POST['userLimbs'] != 1 && $_POST['userLimbs'] != 2 && $_POST['userLimbs'] != 3) {
-        $errors_string[8]=('<div style="color:#dc3555; background-color:#212530;">Неверно вуказано число конечностей</div>');
-        $errors = TRUE;
-    }
-
-    if ($errors) {
-        for($i=0; $i<9; $i++){
-            print($errors_string[$i]);
-        }
-        include('form.php');
-        exit();
-    }
-
-    $userName = $_POST['userName'];
-    $userEmail = $_POST['userEmail'];
-    $userBirthdate = $_POST['userBirthdate'];
-    $userGender = $_POST['userGender'];
-    $userLimbs = $_POST['userLimbs'];
-    $userBio = $_POST['userBio'];
-
-
-    $userAb = array();
-
-    if (!empty($_POST['ab'])) {
-        $n = count($_POST['ab']);
-        $abCheck = array(true, true, true);
-        for ($i = 0; $i < $n; $i++) {
-            if ($_POST['ab'][$i] == 0 || $_POST['ab'][$i] == 1 || $_POST['ab'][$i] == 2) {
-                if ($_POST['ab'][$i] == 0 && $abCheck[0]) {
-                    $abCheck[0] = false;
-                } else if ($_POST['ab'][$i] == 1 && $abCheck[1]) {
-                    $abCheck[1] = false;
-                } else if ($_POST['ab'][$i] == 2 && $abCheck[2]) {
-                    $abCheck[2] = false;
-                } else {
-                    goBack();
-                }
-            } else {
-                goBack();
-            }
-        }
-        for ($i = 0; $i < 3; $i++) {
-            if (!$abCheck[$i]) {
-                $userAb[$i] = 1;
-            } else {
-                $userAb[$i] = 0;
-            }
-        }
-    } else {
-        for ($i = 0; $i < 3; $i++) {
-            $userAb[$i] = 0;
-        }
-    }
-
-
-    try {
-        $user = 'u47558';
-        $pass = '3872701';
-        $db = new PDO('mysql:host=localhost;dbname=u47558', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
-        $stmt_1 = $db->prepare("INSERT INTO user_data (name, email, birthdate, gender, limbs, bio) VALUES (:name, :email, :date, :gender, :limbs, :bio)");
-        $stmt_1->bindParam(':name', $userName);
-        $stmt_1->bindParam(':email', $userEmail);
-        $stmt_1->bindParam(':date', $userBirthdate);
-        $stmt_1->bindParam(':gender', $userGender);
-        $stmt_1->bindParam(':limbs', $userLimbs);
-        $stmt_1->bindParam(':bio', $userBio);
-        $db->beginTransaction();
-        $stmt_1->execute();
-        $id = $db->lastInsertId();
-        $db->commit();
-
-
-        //$get_id = $db->prepare("select max(id) from user_data");
-        //$get_id->execute();
-        //$id = $get_id->fetchColumn();
-
-
-        $stmt_2 = $db->prepare("INSERT INTO user_ab (user_data_id, god, reader, levitation) VALUES (:id, :god, :reader, :levitation)");
-        $stmt_2->bindParam(':id', $id);
-        $stmt_2->bindParam(':god', $userAb[0]);
-        $stmt_2->bindParam(':reader', $userAb[1]);
-        $stmt_2->bindParam(':levitation', $userAb[2]);
-        $db->beginTransaction();
-        $stmt_2->execute();
-        $db->commit();
-
-    } catch (PDOException $e) {
-        print('Error : ' . $e->getMessage());
-        exit();
-    }
-    header('Location: ?save=1');
 }
+
+$errors = FALSE;
+if (empty($_POST['name'])) {
+    print('Напишите ФИО.<br/>');
+    $errors = TRUE;
+}
+
+if (empty($_POST['email'])) {
+    print('Напишите почту.<br/>');
+    $errors = TRUE;
+}
+
+if (empty($_POST['date'])) {
+    print('Напишите свой день рождения.<br/>');
+    $errors = TRUE;
+}
+
+if ( empty($_POST['gender']) ) {
+    print('Укажите пол.<br/>');
+    $errors = TRUE;
+}
+
+switch($_POST['gender']) {
+    case 'm': {
+        $gender='m';
+        break;
+    }
+    case 'f':{
+        $gender='f';
+        break;
+    }
+};
+
+
+if (empty($_POST['limbs'])) {
+    print('Укажите количество конечностей.<br/>');
+    $errors = TRUE;
+}
+
+switch($_POST['limbs']) {
+    case '1': {
+        $limbs='1';
+        break;
+    }
+    case '2':{
+        $limbs='2';
+        break;
+    }
+    case '3':{
+        $limbs='3';
+        break;
+    }
+    case '4':{
+        $limbs='4';
+        break;
+    }
+};
+
+if (empty($_POST['Superpowers'])) {
+    print('Укажите хоть одну суперспособность.<br/>');
+    $errors = TRUE;
+}
+
+$power1=in_array('bessm',$_POST['Superpowers']) ? '1' : '0';
+$power2=in_array('passing',$_POST['Superpowers']) ? '1' : '0';
+$power3=in_array('fly',$_POST['Superpowers']) ? '1' : '0';
+
+if (empty($_POST['biography'])) {
+    print('Напишите кратко биографию.<br/>');
+    $errors = TRUE;
+}
+
+if (empty($_POST['agree'])) {
+    print('Вы не согласились с условиями контракта!<br/>');
+    $errors = TRUE;
+}
+$agree = 'agree';
+
+if ($errors) {
+    exit();
+}
+
+$user = 'u41033';
+$pass = '2342412';
+$db = new PDO('mysql:host=localhost;dbname=u41033', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+
+try {
+    $stmt = $db->prepare("INSERT INTO application SET name = ?, email = ?, date = ? ,gender = ?, limbs = ?, bessm = ?, passing = ? ,fly =?, biography = ?, agree = ?");
+    $stmt -> execute(array($_POST['name'],$_POST['email'],$_POST['date'],$gender,$limbs,$power1,$power2,$power3,$_POST['biography'], $agree));
+}
+catch(PDOException $e){
+    print('Error : ' . $e->getMessage());
+    exit();
+}
+
+header('Location: ?save=1');
+?>
