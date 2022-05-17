@@ -46,8 +46,8 @@ textarea{
     margin-bottom: 0;
     transform: scale(1);
     border-radius: 15px;
-    margin-left: 40%;
-    margin-right: 60%;
+    margin-left: 37%;
+    margin-right: 63%;
 }
 #send:hover, #send:active {
     background-color: green;
@@ -58,6 +58,7 @@ textarea{
 }
 #year {
     background-color: white;
+    color: black;
 }
 
 .error {
