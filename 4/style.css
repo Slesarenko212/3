@@ -14,10 +14,11 @@ body {
     font-weight: bold;
 }
 .container {
+    background-image: url(fon.jpg);
     max-width: 600px;
     margin: auto;
     padding: 20px;
-    border: 1px solid black;
+    border: 2px solid yellow;
 }
 h2 {
     margin-bottom: 20px;
@@ -68,14 +69,16 @@ textarea{
 }
 .messages {
     margin-bottom: 10px;
+    color: red;
+    font-size: 20px;
 }
 
 button {
   background-color: yellow;
   border: none;
   color: black;
-  padding: 12px 35px;
-  margin: 40% 20%;
+  padding: 15px 40px;
+  margin: 40% 45%;
   text-align: center;
   text-decoration: none;
   display: inline-block;
