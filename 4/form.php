@@ -23,11 +23,10 @@
   ?>
 <button onclick="document.getElementById('id01').style.display='block'">Войти</button>
   <div class="container" class="modal">
-      <div class="modal-content">
-    <h2>
+    <form action="" method="POST" class="modal-content animate">
+        <h2>
         Контактная форма
     </h2>
-    <form action="" method="POST">
       Имя:<br><input type="text" name="name" <?php if ($errors['name']) {print 'class="group error"';} else print 'class="group"'; ?> value="<?php print $values['name']; ?>">
       <br>
       E-mail:<br><input type="text" name="email" <?php if ($errors['email']) {print 'class="group error';} else print 'class="group"'; ?> value="<?php print $values['email']; ?>">
@@ -62,7 +61,6 @@
       </div>
       <input type="submit" id="send" value="ОТПРАВИТЬ">
     </form>
-      </div>
   </div>
 </body>
 </html>
