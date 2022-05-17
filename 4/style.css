@@ -21,6 +21,7 @@ body {
     border: 2px solid yellow;
 }
 h2 {
+    font-size: 30px;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -78,7 +79,7 @@ button {
   border: none;
   color: black;
   padding: 15px 40px;
-  margin: 40% 45%;
+  margin: 40% 40%;
   text-align: center;
   text-decoration: none;
   display: inline-block;
