@@ -48,6 +48,7 @@ textarea{
     border-radius: 15px;
     margin-left: 37%;
     margin-right: 63%;
+    cursor: pointer;
 }
 #send:hover, #send:active {
     background-color: green;
@@ -66,4 +67,18 @@ textarea{
 }
 .messages {
     margin-bottom: 10px;
+}
+
+button {
+  background-color: yellow;
+  border: none;
+  color: black;
+  padding: 12px 35px;
+  margin: auto;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 50px;
 }
