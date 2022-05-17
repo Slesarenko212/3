@@ -22,7 +22,7 @@
   // и задавая начальные значения элементов ранее сохраненными.
   ?>
 <button onclick="document.getElementById('id01').style.display='block'">Войти</button>
-  <div class="container" class="modal">
+  <div class="container" class="modal" id="id01">
     <form action="" method="POST" class="modal-content animate">
         <h2>
         Контактная форма
