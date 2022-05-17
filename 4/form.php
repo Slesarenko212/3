@@ -32,7 +32,7 @@
       E-mail:<br><input type="text" name="email" <?php if ($errors['email']) {print 'class="group error';} else print 'class="group"'; ?> value="<?php print $values['email']; ?>">
       <br>
       <div class="form-group">
-<legend for="year"class="group" style="color: white;">Дата рождения:</legend>
+<legend for="year"class="group">Дата рождения:</legend>
 <input type="year" id="year" size="3" name="year" <?php if ($errors['year']) {print 'class="group error"';} else print 'class="group"';?> value="<?php print $values['year']; ?>">
 </div>
       <div <?php if ($errors['gender']) {print 'class="error"';} ?>>
