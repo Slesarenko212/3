@@ -7,7 +7,7 @@ header('Content-Type: text/html; charset=UTF-8');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (!empty($_GET['save'])) {
-        print('Спасибо, форма сохранена.');
+        print('Форма сохранена.');
     }
     include('form.html');
     exit();
@@ -25,7 +25,7 @@ if (empty($_POST['email'])) {
 }
 
 if (empty($_POST['date'])) {
-    print('Напишите свой день рождения.<br/>');
+    print('Напишите дату рождения.<br/>');
     $errors = TRUE;
 }
 
@@ -71,7 +71,7 @@ switch($_POST['limbs']) {
 };
 
 if (empty($_POST['Superpowers'])) {
-    print('Укажите хоть одну суперспособность.<br/>');
+    print('Укажите суперспособность.<br/>');
     $errors = TRUE;
 }
 
@@ -80,12 +80,12 @@ $power2=in_array('passing',$_POST['Superpowers']) ? '1' : '0';
 $power3=in_array('fly',$_POST['Superpowers']) ? '1' : '0';
 
 if (empty($_POST['biography'])) {
-    print('Напишите кратко биографию.<br/>');
+    print('Напишите биографию.<br/>');
     $errors = TRUE;
 }
 
 if (empty($_POST['agree'])) {
-    print('Вы не согласились с условиями контракта!<br/>');
+    print('Вы не согласились с условиями контракта<br/>');
     $errors = TRUE;
 }
 $agree = 'agree';
