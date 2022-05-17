@@ -22,7 +22,8 @@
   // и задавая начальные значения элементов ранее сохраненными.
   ?>
 <button onclick="document.getElementById('id01').style.display='block'">Войти</button>
-  <div class="container">
+  <div class="container" class="modal">
+      <div class="modal-content">
     <h2>
         Контактная форма
     </h2>
@@ -61,6 +62,7 @@
       </div>
       <input type="submit" id="send" value="ОТПРАВИТЬ">
     </form>
+      </div>
   </div>
 </body>
 </html>
