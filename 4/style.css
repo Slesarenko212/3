@@ -43,12 +43,15 @@ textarea{
     height: 50px;
     margin-bottom: 0;
     transform: scale(1);
+    border-radius: 15px;
 }
 #send:hover, #send:active {
     background-color: green;
     color: yellow;
 }
 #send:active {
+    background-color: yellow;
+    color: red;
     transform: scale(.97);
     transition: transform .2s;
 }
