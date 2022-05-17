@@ -6,6 +6,7 @@
 }
 
 body {
+     background-image: url(fon.jpg);
     position: relative;
     font-size: 14px;
     color: black;
@@ -70,12 +71,11 @@ textarea{
 }
 
 button {
-    background-image: url(fon.jpg);
   background-color: yellow;
   border: none;
   color: black;
   padding: 12px 35px;
-  margin: auto;
+  margin: 40% 20%;
   text-align: center;
   text-decoration: none;
   display: inline-block;
