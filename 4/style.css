@@ -46,8 +46,8 @@ textarea{
     margin-bottom: 0;
     transform: scale(1);
     border-radius: 15px;
-    margin-left: 50%;
-    margin-right: 50%;
+    margin-left: 40%;
+    margin-right: 60%;
 }
 #send:hover, #send:active {
     background-color: green;
