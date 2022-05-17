@@ -21,7 +21,7 @@
   // Далее выводим форму отмечая элементы с ошибками классом error
   // и задавая начальные значения элементов ранее сохраненными.
   ?>
-
+<button onclick="document.getElementById('id01').style.display='block'">Войти</button>
   <div class="container">
     <h2>
         Контактная форма
