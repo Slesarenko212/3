@@ -6,7 +6,7 @@
 }
 
 body {
-     background-image: url(fon.jpg);
+    background-image: url(fon.jpg) no-repeat;
     position: relative;
     font-size: 14px;
     color: black;
@@ -14,7 +14,7 @@ body {
     font-weight: bold;
 }
 .container {
-    background-image: url(fon.jpg);
+    background-image: url(fon.jpg) no-repeat;
     max-width: 600px;
     margin: auto;
     padding: 20px;
