@@ -1,8 +1,5 @@
 <?php
 
-// PHP хранит логин и пароль в суперглобальном массиве $_SERVER.
-// Подробнее см. стр. 26 и 99 в учебном пособии Веб-программирование и веб-сервисы.
-
 $db = new PDO('mysql:host=localhost;dbname=u47558', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
 $stmt = $db->prepare("SELECT * FROM admin WHERE id = ?");
 $stmt -> execute([1]);
@@ -39,9 +36,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete'])){//Если �
   if($_POST['select_user'] == 0){
       header('Location: admin.php');
   }
-  
   $user_id = (int) $_POST['select_user'];//Получение айди выбраного польвователя
-
   //Удаление всех выбраных им суперспособностей
   $stmt = $db->prepare("DELETE FROM superability WHERE human_id = ?");
   $stmt -> execute([$user_id]);
@@ -52,23 +47,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete'])){//Если �
   $stmt -> execute([$user_id]);
   header('Location: admin.php');
 }
-
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit'])){//Если была нажата кнопка редактировать данные пользователя
   // Перезаписываем данные в БД новыми данными,
   // кроме логина и пароля.
-
   $user_id = (int) $_COOKIE['user_id'];//Получение айди выбраного польвователя
-  
   // Обновление данных в таблице human
   $stmt = $db->prepare("UPDATE human SET name = ?, email = ?, year = ?, gender = ?, limbs = ?, bio = ? WHERE id = ?");
   $stmt -> execute([$_POST['name'], $_POST['email'], $_POST['year'], $_POST['gender'], $_POST['limbs'], $_POST['bio'], $user_id]);
-
   // Обновление данных в таблице superability
   $stmt = $db->prepare("DELETE FROM superability WHERE human_id = ?");
   $stmt -> execute([$user_id]);
-
   $ability = $_POST['ability'];
-
   foreach($ability as $item) {
     $stmt = $db->prepare("INSERT INTO superability SET human_id = ?, name_of_superability = ?");
     $stmt -> execute([$user_id, $item]);
@@ -89,12 +78,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit'])){//Если б�
 <body>
 <div class="container">
   <h2>Панель администратора</h2>
-
   <h3>Статистика по суперспособностям:</h3>
   <p>Бессмертие: <?php print $count1 ?></p> <br>
   <p>Прохождение сквозь стены: <?php print $count2 ?></p> <br>
   <p>Левитация: <?php print $count3 ?></p> <br>
-
   <h3>Выбери пользователя:</h3>
   <form action="" method="POST">
     <select name="select_user" class ="group list" id="selector_user">
@@ -113,7 +100,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit'])){//Если б�
     <input name="delete" type="submit" class="send" value="УДАЛИТЬ ПОЛЬЗОВАТЕЛЯ" />
     <input name="editing" type="submit" class="send" value="РЕДАКТИРОВАТЬ ПОЛЬЗОВАТЕЛЯ" />
   </form>
-
   <?php
 
   if(isset($_POST['editing']) && $_SERVER['REQUEST_METHOD'] == 'POST'){//Если была нажата кнопка редактировать пользователя
@@ -183,7 +169,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit'])){//Если б�
     </div>
     <input name="edit" type="submit" class="send" value="СОХРАНИТЬ ИЗМЕНЕНИЯ">
   </form>
-
   <?php
   }
   ?>
