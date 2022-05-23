@@ -183,7 +183,7 @@ else {
       session_start() && !empty($_SESSION['login'])) {
     // Перезаписываем данные в БД новыми данными,
     // кроме логина и пароля.
-    $db = new PDO('mysql:host=localhost;dbname=u41033', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
+    $db = new PDO('mysql:host=localhost;dbname=u47558', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
     // Обновление данных в таблице human
     $stmt = $db->prepare("UPDATE human SET name = ?, email = ?, year = ?, gender = ?, limbs = ?, bio = ? WHERE id= ?");
     $stmt -> execute([$_POST['name'], $_POST['email'], $_POST['year'], $_POST['gender'], $_POST['limbs'], $_POST['bio'],$_SESSION['uid']]);
