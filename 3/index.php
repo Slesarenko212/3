@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (!empty($_GET['save'])) {
         print('Форма сохранена.');
     }
-    include('index.html');
+    include('form.html');
     exit();
 }
 
