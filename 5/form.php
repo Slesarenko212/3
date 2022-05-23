@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
   <?php
-  
   if (!empty($messages)) {
     print('<div class="messages">');
     // Выводим все сообщения.
@@ -22,7 +20,6 @@
   // Далее выводим форму отмечая элементы с ошибками классом error
   // и задавая начальные значения элементов ранее сохраненными.
   ?>
-
   <div class="container">
     <h2>
         Контактная форма
@@ -61,15 +58,13 @@
         <input type="checkbox" name="checkbox" <?php if ($values['checkbox']) {print 'checked';} ?>> С контрактом ознакомлен(a) 
       </div>
       <input type="submit" id="send" value="ОТПРАВИТЬ">
-    </form>
-  </div>
-  <div class="container">
-    <?php
+        <?php
       if (!empty($_COOKIE[session_name()]) && !empty($_SESSION['login']))
         print('<a href="login.php" class = "enter-exit" title = "Log out">Выйти</a>');
       else
         print('<a href="login.php" class = "enter-exit"  title = "Log in">Войти</a>');
     ?>
+    </form>
   </div>
 </body>
 </html>
