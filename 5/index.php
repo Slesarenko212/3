@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // загрузить данные пользователя из БД
     // и заполнить переменную $values,
     // предварительно санитизовав.
-    $db = new PDO('mysql:host=localhost;dbname=u41033', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
+    $db = new PDO('mysql:host=localhost;dbname=u47558', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
     $stmt = $db->prepare("SELECT * FROM human WHERE id = ?");
     $stmt -> execute([$_SESSION['uid']]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -210,7 +210,7 @@ else {
     setcookie('pass', $pass);
 
     // Сохранение данных формы, логина и хеш md5() пароля в базу данных.
-    $db = new PDO('mysql:host=localhost;dbname=u41033', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
+    $db = new PDO('mysql:host=localhost;dbname=u47558', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
 
     // Запись в таблицу human
     $stmt = $db->prepare("INSERT INTO human SET name = ?, email = ?, year = ?, gender = ?, limbs = ?, bio = ?");
