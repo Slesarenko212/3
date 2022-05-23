@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (!empty($_GET['save'])) {
         print('Форма сохранена.');
     }
-    include('form.html');
+    include('index.html');
     exit();
 }
 
@@ -94,9 +94,9 @@ if ($errors) {
     exit();
 }
 
-$user = 'u41033';
-$pass = '2342412';
-$db = new PDO('mysql:host=localhost;dbname=u41033', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+$user = 'u47558';
+$pass = '3872701';
+$db = new PDO('mysql:host=localhost;dbname=u47558', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
 
 try {
     $stmt = $db->prepare("INSERT INTO application SET name = ?, email = ?, date = ? ,gender = ?, limbs = ?, bessm = ?, passing = ? ,fly =?, biography = ?, agree = ?");
