@@ -16,7 +16,6 @@ body {
     margin: auto;
     padding: 20px;
     margin-bottom: 20px;
-
     background-color: #ffff66;
     border-radius: 15px;
 }
@@ -43,7 +42,6 @@ textarea{
     width: 100%;
     height: 50px;
     margin-bottom: 0;
-
     transform: scale(1);
 }
 #send:hover, #send:active {
@@ -56,10 +54,6 @@ textarea{
 }
 .radio {
     margin-left: 10px;
-}
-#year {
-    background-color: white;
-    color: black;
 }
 
 /* Сообщения об ошибках и поля с ошибками выводим с красным бордюром. */
