@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         strip_tags($_COOKIE['pass']));
     }
   }
+
   // Складываем признак ошибок в массив.
   $errors = array();
   $errors['name'] = !empty($_COOKIE['name_error']);
@@ -34,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $errors['gender'] = !empty($_COOKIE['gender_error']);
   $errors['limbs'] = !empty($_COOKIE['limbs_error']);
   $errors['checkbox'] = !empty($_COOKIE['checkbox_error']);
+
   // Выдаем сообщения об ошибках.
   if ($errors['name']) {
     // Удаляем куку, указывая время устаревания в прошлом.
@@ -51,16 +53,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   }
   if ($errors['gender']) {
     setcookie('gender_error', '', 100000);
-    $messages[] = '<div>Выберите пол</div>';
+    $messages[] = '<div>Выберите пол.</div>';
   }
   if ($errors['limbs']) {
     setcookie('limbs_error', '', 100000);
-    $messages[] = '<div>Выберите количество конечностей</div>';
+    $messages[] = '<div>Выберите количество конечностей.</div>';
   }
   if ($errors['checkbox']) {
     setcookie('checkbox_error', '', 100000);
-    $messages[] = '<div>Поставьте галочку</div>';
+    $messages[] = '<div>Поставьте галочку.</div>';
   }
+
   // Складываем предыдущие значения полей в массив, если есть.
   // При этом санитизуем все данные для безопасного отображения в браузере.
   $values = array();
@@ -84,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // и заполнить переменную $values,
     // предварительно санитизовав.
     $db = new PDO('mysql:host=localhost;dbname=u47558', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
+    
     $stmt = $db->prepare("SELECT * FROM human WHERE id = ?");
     $stmt -> execute([$_SESSION['uid']]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -94,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $values['limbs'] = $row['limbs'];
     $values['bio'] = strip_tags($row['bio']);
     $values['checkbox'] = true; 
+
     $stmt = $db->prepare("SELECT * FROM superability WHERE human_id = ?");
     $stmt -> execute([$_SESSION['uid']]);
     $ability = array();
@@ -101,8 +106,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       array_push($ability, strip_tags($row['name_of_superability']));
     }
     $values['ability'] = $ability;
+    
     printf('Вход с логином %s, uid %d', $_SESSION['login'], $_SESSION['uid']);
   }
+
   // Включаем содержимое файла form.php.
   // В нем будут доступны переменные $messages, $errors и $values для вывода 
   // сообщений, полей с ранее заполненными данными и признаками ошибок.
@@ -178,19 +185,24 @@ else {
     setcookie('limbs_error', '', 100000);
     setcookie('checkbox_error', '', 100000);
   }
+
   // Проверяем меняются ли ранее сохраненные данные или отправляются новые.
   if (!empty($_COOKIE[session_name()]) &&
       session_start() && !empty($_SESSION['login'])) {
     // Перезаписываем данные в БД новыми данными,
     // кроме логина и пароля.
     $db = new PDO('mysql:host=localhost;dbname=u47558', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
+    
     // Обновление данных в таблице human
     $stmt = $db->prepare("UPDATE human SET name = ?, email = ?, year = ?, gender = ?, limbs = ?, bio = ? WHERE id= ?");
     $stmt -> execute([$_POST['name'], $_POST['email'], $_POST['year'], $_POST['gender'], $_POST['limbs'], $_POST['bio'],$_SESSION['uid']]);
+
     // Обновление данных в таблице superability
     $stmt = $db->prepare("DELETE FROM superability WHERE human_id = ?");
     $stmt -> execute([$_SESSION['uid']]);
+
     $ability = $_POST['ability'];
+
     foreach($ability as $item) {
       $stmt = $db->prepare("INSERT INTO superability SET human_id = ?, name_of_superability = ?");
       $stmt -> execute([$_SESSION['uid'], $item]);
@@ -228,12 +240,15 @@ else {
       $stmt = $db->prepare("INSERT INTO superability SET human_id = ?, name_of_superability = ?");
       $stmt -> execute([$count, $item]);
     }
+
     // Запись в таблицу login_pass
     $stmt = $db->prepare("INSERT INTO login_pass SET human_id = ?, login = ?, pass = ?");
     $stmt -> execute([$count, $login, md5($pass)]);
   }
+
   // Сохраняем куку с признаком успешного сохранения.
   setcookie('save', '1');
+
   // Делаем перенаправление.
   header('Location: ./');
 }
