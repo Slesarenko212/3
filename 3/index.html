@@ -15,25 +15,25 @@
     <div class="fon1 tab mt-4 mb-4 shadow rounded" id="quf">
     <form method="POST" class="row mx-5 my-2 gy-1">
         <div class="form_item form-group">
-            <label for="formName" style="color: black;">Имя:</label>
+            <label for="formName">Имя:</label>
             <input type="text" class="form_input _req form-control w-50 shadow bg-white rounded" name="name"
                 id="formName" placeholder="Enter Username">
         </div>
 
         <div class="form_item form-group">
-            <label for="formEmail" style="color: black;">E-mail:</label>
+            <label for="formEmail">E-mail:</label>
             <input type="email" class="form_input _req _email form-control w-50 shadow bg-white rounded" id="formEmail"
                 name="email" placeholder="Enter E-mail:">
         </div>
 
         <div class="form_item form-group">
-            <label for="formDate" style="color: black;">Дата рождения:</label>
+            <label for="formDate">Дата рождения:</label>
             <input type="date" class="form_input _req form-control w-50 shadow bg-white rounded" name="date" value=""
                 min="1900-01-01" max="2022-03-30">
         </div>
 
         <div class="form_item form-group">
-            <label for="formSex" style="color: black;">Пол:</label></br>
+            <label for="formSex">Пол:</label></br>
             <div class="form-check1 form-check-inline">
                 <input class="form-check-input" type="radio" name="gender" id="Sex1" value="m">
                 <label class="form-check-label" for="Radio1">Мужской</label>
@@ -45,7 +45,7 @@
         </div>
 
         <div class="form_item form-group">
-            <label for="formKon" style="color: black;">Количество конечностей:</label></br>
+            <label for="formKon">Количество конечностей:</label></br>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="limbs" id="RadioK1" value="1">
                 <label class="form-check-label" for="RadioK1">1</label>
@@ -65,7 +65,7 @@
         </div>
 
         <div class="form_item form-group">
-            <label for="Superpower" style="color: black;">Сверхспособности:</label>
+            <label for="Superpower">Сверхспособности:</label>
             <select multiple class="form_input _req form-control w-50 shadow bg-white rounded" id="multipleSuper"
                 name="Superpowers[]">
                 <option value="bessm">Бессмертие</option>
@@ -75,7 +75,7 @@
         </div>
 
         <div class="form_item form-group">
-            <label for="formMessage" style="color: black;">Биография:</label>
+            <label for="formMessage">Биография:</label>
             <textarea id="formMessage" id="formMessage" name="biography"
                 class="form_input _req form-control w-50 shadow bg-white rounded" id="form"></textarea>
         </div>
@@ -84,6 +84,7 @@
             <label id="soglasie " class="checkbox_label form-check-label">С контрактом ознакомлен(а) </label>
             <input for="soglasie" checked type="checkbox" name="agree" class="checkbox_input form-check-input">
         </div>
+
 
         <label class="col-12"><input type="submit" name="submit" class="submit btn-dark"></label>
     </form>
