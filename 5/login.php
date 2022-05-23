@@ -9,14 +9,11 @@
 </head>
 <body>
 <?php
-
 // Отправляем браузеру правильную кодировку,
 // файл login.php должен быть в кодировке UTF-8 без BOM.
 header('Content-Type: text/html; charset=UTF-8');
-
 // Начинаем сессию.
 session_start();
-
 // В суперглобальном массиве $_SESSION хранятся переменные сессии.
 // Будем сохранять туда логин после успешной авторизации.
 if (!empty($_SESSION['login'])) {
@@ -27,7 +24,6 @@ if (!empty($_SESSION['login'])) {
   // Делаем перенаправление на форму.
   header('Location: ./');
 }
-
 // В суперглобальном массиве $_SERVER PHP сохраняет некторые заголовки запроса HTTP
 // и другие сведения о клиненте и сервере, например метод текущего запроса $_SERVER['REQUEST_METHOD'].
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -36,20 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     print("<div>Пользователя с таким логином не существует</div>");
   if (!empty($_GET['wrongpass']))
     print("<div>Неверный пароль!</div>");
-
 ?>
-
   <form action="" method="post">
     <input name="login" placeholder="Введи логин"/>
     <input name="pass" placeholder="Введи пароль"/>
     <input type="submit" id="login" value="Войти" />
   </form>
-
   <?php
 }
 // Иначе, если запрос был методом POST, т.е. нужно сделать авторизацию с записью логина в сессию.
 else {
-
   // TODO: Проверть есть ли такой логин и пароль в базе данных.
   // Выдать сообщение об ошибках.
   $db = new PDO('mysql:host=localhost;dbname=u47558', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
@@ -68,11 +60,9 @@ else {
   $_SESSION['login'] = $_POST['login'];
   // Записываем ID пользователя.
   $_SESSION['uid'] = $row["human_id"];
-
   // Делаем перенаправление.
   header('Location: ./');
 }
-
 ?>
 
 </body>
