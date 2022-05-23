@@ -58,7 +58,8 @@ textarea{
     margin-left: 10px;
 }
 #year {
-    background-color: blue;
+    background-color: white;
+    color: black;
 }
 
 /* Сообщения об ошибках и поля с ошибками выводим с красным бордюром. */
@@ -86,9 +87,9 @@ textarea{
     transition: transform .2s;
     padding: 0.5rem 2.5rem;
     display: inline-block;
-    background-color: blue;
+    background-color: #b3c41b;
     border-radius: 3px;
 }
 .enter-exit:hover {
-    background-color: cornflowerblue;
+    background-color: #acd32;
 }
