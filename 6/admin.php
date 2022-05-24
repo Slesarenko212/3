@@ -1,7 +1,7 @@
 <?php
 $db_user = 'u47558';
 $db_pass = '3872701';
-$db = new PDO('mysql:host=localhost;dbname=u47562', $db_user, $db_pass, array(
+$db = new PDO('mysql:host=localhost;dbname=u47558', $db_user, $db_pass, array(
     PDO::ATTR_PERSISTENT => true
 ));
 $login = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
