@@ -24,162 +24,282 @@ if (empty($_SERVER['PHP_AUTH_USER']) ||
 
 // успешно авторизовались и видим защищенные паролем данные
 // собирамем статистику по суперспособностям
-$stmt = $db->prepare("SELECT * FROM superability WHERE name_of_superability = ?");
-$stmt -> execute(["Бессмертие"]);
-$count1 = $stmt->rowCount();
-$stmt = $db->prepare("SELECT * FROM superability WHERE name_of_superability = ?");
-$stmt -> execute(["Прохождение сквозь стены"]);
-$count2 = $stmt->rowCount();
-$stmt = $db->prepare("SELECT * FROM superability WHERE name_of_superability = ?");
-$stmt -> execute(["Левитация"]);
-$count3 = $stmt->rowCount();
-
-$stmt = $db->query("SELECT max(id) FROM human");
-$row = $stmt->fetch();
-$count = (int) $row[0];
-
-
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete'])){//Если была нажата кнопка удалить пользователя
-
-  if($_POST['select_user'] == 0){
-      header('Location: admin.php');
-  }
-  $user_id = (int) $_POST['select_user'];//Получение айди выбраного польвователя
-  //Удаление всех выбраных им суперспособностей
-  $stmt = $db->prepare("DELETE FROM superability WHERE human_id = ?");
-  $stmt -> execute([$user_id]);
-  //Удаление выбранного пользователя
-  $stmt = $db->prepare("DELETE FROM login_pass WHERE human_id = ?");
-  $stmt -> execute([$user_id]);
-  $stmt = $db->prepare("DELETE FROM human WHERE id = ?");
-  $stmt -> execute([$user_id]);
-  header('Location: admin.php');
-}
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit'])){//Если была нажата кнопка редактировать данные пользователя
-  // Перезаписываем данные в БД новыми данными,
-  // кроме логина и пароля.
-  $user_id = (int) $_COOKIE['user_id'];//Получение айди выбраного польвователя
-  // Обновление данных в таблице human
-  $stmt = $db->prepare("UPDATE human SET name = ?, email = ?, year = ?, gender = ?, limbs = ?, bio = ? WHERE id = ?");
-  $stmt -> execute([$_POST['name'], $_POST['email'], $_POST['year'], $_POST['gender'], $_POST['limbs'], $_POST['bio'], $user_id]);
-  // Обновление данных в таблице superability
-  $stmt = $db->prepare("DELETE FROM superability WHERE human_id = ?");
-  $stmt -> execute([$user_id]);
-  $ability = $_POST['ability'];
-  foreach($ability as $item) {
-    $stmt = $db->prepare("INSERT INTO superability SET human_id = ?, name_of_superability = ?");
-    $stmt -> execute([$user_id, $item]);
-  }
-  header('Location: admin.php');
-}
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="admin.css">
-  <title>Админ</title>
-</head>
-<body>
-<div class="container">
-  <h2>Панель администратора</h2>
-  <h3>Статистика по суперспособностям:</h3>
-  <p>Бессмертие: <?php print $count1 ?></p> <br>
-  <p>Прохождение сквозь стены: <?php print $count2 ?></p> <br>
-  <p>Левитация: <?php print $count3 ?></p> <br>
-  <h3>Выбери пользователя:</h3>
-  <form action="" method="POST">
-    <select name="select_user" class ="group list" id="selector_user">
-      <option selected disabled value ="0">Выбрать пользователя</option>
-      <?php
-      for($index =1 ;$index <= $count;$index++){//Заполнение списка пользователями
-        $stmt = $db->prepare("SELECT * FROM human WHERE id = ?");
-        $stmt -> execute([$index]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if($user['id'] == $index){//Проверка на существование пользователя с айди index
-            print("<option value =" . $index . ">" . "id: ". $user['id'] . ", Имя: " . $user['name'] . "</option>");//Добавление в список пользователя с существующим айди
-        }
+function show_tables($db){
+  $sql = 'SELECT  application6.*, 
+                    SuperDef.name as power,
+                    users6.login
+            FROM application6
+            INNER JOIN Superpowers6
+                ON application6.id = Superpowers6.id
+            INNER JOIN SuperDef 
+                ON Superpowers6.superpowers = SuperDef.id
+            INNER JOIN users6 
+                ON users6.id = application6.id;';
+  ?>
+  <table class="table">
+  <caption>Data of users</caption> 
+    <tr><th>id</th><th>name</th><th>email</th><th>date</th><th>pol</th><th>konechn</th><th>info</th><th>superpower</th><th>login</th><th colspan="3">action</th></tr>
+  <?php
+	  foreach ($db->query($sql, PDO::FETCH_ASSOC) as $row) {
+      print('<tr>');
+      foreach ($row as $v){
+        print('<td>'.$v. '</td>');
       }
-      ?>
-    </select><br> 
-    <input name="delete" type="submit" class="send" value="УДАЛИТЬ ПОЛЬЗОВАТЕЛЯ" />
-    <input name="editing" type="submit" class="send" value="РЕДАКТИРОВАТЬ ПОЛЬЗОВАТЕЛЯ" />
-  </form>
-  <?php
+      print('<td colspan="2"> <a href="?act=edit_article&edit_id='.$row["id"].'">edit</a></td>   ');print('<td> <a href="?act=delete_article&delete_id='.$row["id"].'">delete</a></td>');
+    } 
+    print('</tr></table>');
+    print('<td> <a href="?act=add_article">add</a></td><br>');
 
-  if(isset($_POST['editing']) && $_SERVER['REQUEST_METHOD'] == 'POST'){//Если была нажата кнопка редактировать пользователя
-    if($_POST['select_user'] == 0){
-      header('Location: admin.php');
-    }
-    $user_id = (int) $_POST['select_user'];// получение айди выбраного польвователя
-    setcookie('user_id', $user_id);
-    // получаем данные пользователя из бд
-    $values = array();
-    $stmt = $db->prepare("SELECT * FROM human WHERE id = ?");
-    $stmt -> execute([$user_id]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    $values['name'] = strip_tags($row['name']);
-    $values['email'] = strip_tags($row['email']);
-    $values['year'] = $row['year'];
-    $values['gender'] = $row['gender'];
-    $values['limbs'] = $row['limbs'];
-    $values['bio'] = strip_tags($row['bio']);
-    $values['checkbox'] = true; 
-
-    $stmt = $db->prepare("SELECT * FROM superability WHERE human_id = ?");
-    $stmt -> execute([$user_id]);
-    $ability = array();
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-      array_push($ability, strip_tags($row['name_of_superability']));
-    }
-    $values['ability'] = $ability;
-
+    
+    $sql = 'SELECT SuperDef.name as superpower, COUNT(superpowers) as number_of_users
+            FROM Superpowers6 
+            LEFT JOIN SuperDef
+            ON Superpowers6.superpowers=SuperDef.id
+            GROUP BY superpowers;';
+    ?>
+    <table class="table">
+    <caption>Statistics of Superpowers</caption> 
+      <tr><th>superpower</th><th>number_of_users</th></tr>
+    <?php
+    foreach ($db->query($sql, PDO::FETCH_ASSOC) as $row) {
+      print('<tr>');
+      foreach ($row as $k=>$v){
+	  	  print('<td>'.$v. '</td>');
+      }
+    }print('</tr></table>');
+    print('<br><a href=login.php?do=logout> Выход</a><br>');
+}
+function form($db){
   ?>
-  <br>
-  <h3>Режим редактирования:</h3>
-  <form action="" method="POST">
-    Имя:<br><input type="text" name="name" class="group" value="<?php print $values['name']; ?>">
-    <br>
-    E-mail:<br><input type="text" name="email"class="group" value="<?php print $values['email']; ?>">
-    <br>
-    Год рождения:<br>
-    <select size="3" name="year" class="group list" value="<?php print $values['year']; ?>">
-        <?php for($i = 1900; $i <= date('Y'); $i++): ?>
-        <option value="<?=$i?>" <?php if($i == $values['year']) {print 'selected';} ?>><?=$i?></option>
-        <?php endfor; ?>
-    </select>
-    <div>
-      Пол:<br>
-      <input class="radio" type="radio" name="gender" value="M" <?php if ($values['gender'] == 'M') {print 'checked';} ?>> Мужской
-      <input class="radio" type="radio" name="gender" value="W" <?php if ($values['gender'] == 'W') {print 'checked';} ?>> Женский
-    </div>
-    <div>
-      Количество конечностей:<br>
-      <input class="radio" type="radio" name="limbs" value="4" <?php if ($values['limbs'] == '4') {print 'checked';} ?>> 4
-      <input class="radio" type="radio" name="limbs" value="3" <?php if ($values['limbs'] == '3') {print 'checked';} ?>> 3
-      <input class="radio" type="radio" name="limbs" value="2" <?php if ($values['limbs'] == '2') {print 'checked';} ?>> 2
-      <input class="radio" type="radio" name="limbs" value="1" <?php if ($values['limbs'] == '1') {print 'checked';} ?>> 1
-      <input class="radio" type="radio" name="limbs" value="0" <?php if ($values['limbs'] == '0') {print 'checked';} ?>> 0 
-    </div>
-    Cверхспособности:<br>
-    <select class="group" name="ability[]" size="3" multiple>
-        <option value="Бессмертие" <?php if (in_array("Бессмертие", $values['ability'])) {print 'selected';} ?>>Бессмертие</option>
-        <option value="Прохождение сквозь стены" <?php if (in_array("Прохождение сквозь стены", $values['ability'])) {print 'selected';} ?>>Прохождение сквозь стены</option>
-        <option value="Левитация" <?php if (in_array("Левитация", $values['ability'])) {print 'selected';} ?>>Левитация</option>
-    </select>
-    <br>
-    Биография:<br><textarea class="group" name="bio" rows="3" cols="30"><?php print $values['bio']; ?></textarea>
-    <div>
-      <input type="checkbox" name="checkbox" <?php if ($values['checkbox']) {print 'checked';} ?>> С контрактом ознакомлен(a) 
-    </div>
-    <input name="edit" type="submit" class="send" value="СОХРАНИТЬ ИЗМЕНЕНИЯ">
-  </form>
+  <label for='name'>Имя</label>
+      <input name='name'><br />
+  <label for='email'>Email</label>
+      <input name='email'><br />
+  <label for='date'>Дата рождения</label>
+      <input name='date'><br />
+  <label>Пол:</label>
+	  <input type="radio" value="male" name='pol'>Мужской
+	  <input type="radio" value="female" name='pol'>Женский<br />
+  
+  <label>Количество конечностей:</label>
+	  <input type="radio" name='konechn' value='1'>1
+	  <input type="radio" name='konechn' value='2'>2
+	  <input type="radio" name='konechn' value='3'>3
+	  <input type="radio" name='konechn' value='4'>4<br />
+	  
+	  <p>Сверхспособности:</p>
+      <label><select name="super[]" multiple="multiple">
+        <?php
+				$sql = 'SELECT * FROM SuperDef';
+				foreach ($db->query($sql) as $row) {
+					?><option value=<?php print $row['id']?> name=super[]>
+					<?php print $row['name'] . "\t";
+				}
+			?></option>
+		</select>
+      </label><br />
+	  
+	  
+	  
+  <label for="info">Информация о себе</label>
+     <textarea name='info'></textarea><br />
+
   <?php
+}
+function errors(){
+  $errors = FALSE;
+    // ИМЯ
+    if (empty($_POST['name'])&&empty($_GET['edit_id'])) {
+      $errors = TRUE;
+    }
+    else if(!empty($_POST['name'])&&!preg_match("/^[а-яё]|[a-z]$/iu", $_POST['name'])){
+      $errors = TRUE;
+    }
+    // EMAIL
+    if (empty($_POST['email'])&&empty($_GET['edit_id'])){
+      $errors = TRUE;
+    }
+    else if(!empty($_POST['email'])&&!preg_match("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+.[a-zA-Z.]{2,5}$/", $_POST['email'])){
+      $errors = TRUE;
+    }
+    // Дата
+    if (empty($_POST['date'])&&empty($_GET['edit_id'])){
+      $errors = TRUE;
+    }
+    // ПОЛ
+    if (empty($_POST['pol'])&&empty($_GET['edit_id'])) {
+      $errors = TRUE;
+    }
+    // КОНЕЧНОСТИ
+    if (empty($_POST['konechn'])&&empty($_GET['edit_id'])) {
+      $errors = TRUE;
+    }
+    // СВЕРХСПОСОБНОСТИ
+    $super=array();
+    if(empty($_POST['super'])&&empty($_GET['edit_id'])){
+      $errors = TRUE;
+    }
+    else if(!empty($_POST['super'])){
+      foreach ($_POST['super'] as $key => $value) {
+        $super[$key] = $value;
+      }
+    }
+    // ИНФОРМАЦИЯ О СЕБЕ
+    if (empty($_POST['info'])&&empty($_GET['edit_id'])) {
+      $errors = TRUE;
+    }
+    if ($errors) {
+      return true;
+    }
+    else{
+      return false;
+    }
+}
+function delete_user($db, $del){
+  try{
+    $sth = $db->prepare("DELETE FROM application6 WHERE id = ?");
+    $sth->execute(array($del));
+    $sth = $db->prepare("DELETE FROM Superpowers6 WHERE id = ?");
+    $sth->execute(array($del));
+    $sth = $db->prepare("DELETE FROM users6 WHERE id = ?");
+    $sth->execute(array($del));
   }
-  ?>
-</div>
-</body>
-</html>
+  catch(PDOException $e){
+    print('Error: ' . $e->getMessage());
+    exit();
+  }
+}
+function add_user($db){
+  $sth = $db->prepare("SELECT login FROM users6");
+  $sth->execute();
+  $login_array = $sth->fetchAll(PDO::FETCH_COLUMN);
+  $flag=true;
+  do{
+    $login = rand(1,1000);
+    $pass = rand(1,10000);
+    foreach($login_array as $value){
+      if($value == $login)
+        $flag=false;
+    }
+  }while($flag==false);
+  $hash = password_hash((string)$pass, PASSWORD_BCRYPT);
+  
+  try {
+    $stmt = $db->prepare("INSERT INTO application6 SET name = ?, email = ?, date = ?, pol = ?, konechn = ?, info = ?");
+    $stmt -> execute(array(
+        $_POST['name'],
+        $_POST['email'],
+        $_POST['date'],
+        $_POST['pol'],
+        $_POST['konechn'],
+        $_POST['info'],
+      )
+    );
+
+    $id_db = $db->lastInsertId("application6");
+    $stmt = $db->prepare("INSERT INTO Superpowers6 SET id = ?, superpowers = ?");
+    foreach($_POST['super'] as $s){
+        $stmt -> execute(array(
+          $id_db,
+          $s,
+        ));
+      }
+    $stmt = $db->prepare("INSERT INTO users6 SET login = ?, pass = ?");
+    $stmt -> execute(array(
+        $login,
+        $hash,
+      )
+    );
+  } 
+  catch(PDOException $e){
+    print('Error: ' . $e->getMessage());
+    exit();
+  }
+}
+function edit_user($db, $edit){
+  try {
+    $stmt = $db->prepare('SELECT * FROM application6 WHERE id=?');
+    $stmt -> execute(array($edit));
+    $a = array();
+    $old_data = ($stmt->fetchAll(PDO::FETCH_ASSOC))['0'];
+    foreach ($old_data as $key=>$val){
+      $a[$key] = $val;
+    }
+    $name = empty($_POST['name']) ? $a['name'] : $_POST['name'];
+    $email = empty($_POST['email']) ? $a['email'] : $_POST['email'];
+    $date = empty($_POST['date']) ? $a['date'] : $_POST['date'];
+    $pol = empty($_POST['pol']) ? $a['pol'] : $_POST['pol'];
+    $konechn = empty($_POST['konechn']) ? $a['konechn'] : $_POST['konechn'];
+    $info = empty($_POST['info']) ? $a['info'] : $_POST['info'];
+
+    $stmt = $db->prepare("UPDATE application6 SET name = ?, email = ?, date = ?, pol = ?, konechn = ?, info = ? WHERE id =?");
+    $stmt -> execute(array(
+        $name,
+        $email,
+        $date,
+        $pol,
+        $konechn,
+        $info,
+        $edit
+    ));
+    if(!empty($_POST['super'])){
+      $sth = $db->prepare("DELETE FROM Superpowers6 WHERE id = ?");
+      $sth->execute(array($edit));
+      $stmt = $db->prepare("INSERT INTO Superpowers6 SET id = ?, superpowers = ?");
+      foreach($_POST['super'] as $s){
+          $stmt -> execute(array(
+            $edit,
+            $s,
+          ));
+        }
+    }
+  }
+  catch(PDOException $e){
+    print('Error: ' . $e->getMessage());
+    exit();
+  }
+}
+
+if($_SERVER['REQUEST_METHOD'] == 'GET'){
+  show_tables($db);
+  if(isset($_GET['act'])&&$_GET['act']=='edit_article'){
+    ?><form action="" method="post">
+      <h4>Редактировать профиль с id=<?php print($_GET['edit_id']); ?></h4>
+    <p>
+      <?php form($db);?>
+    </p>
+    <p><button type="submit" value="send">Отправить</button></p>
+    </form>
+    <?php
+  }
+  else if(isset($_GET['act'])&&$_GET['act']=='add_article'){
+    ?><form action="" method="post">
+      <h5>Добавить профиль</h5>
+    <p>
+      <?php form($db);?>
+    </p>
+    <p><button type="submit" value="send">Отправить</button></p>
+    </form>
+    <?php
+     }
+  else if(isset($_GET['act'])&&$_GET['act']=='delete_article'){
+    ?>
+    <form action="" method="post">
+    <h4>Удалить пользователя c id=<?php print($_GET['delete_id']);?>?</h4>
+    <p><button type="submit" value="send">Ок</button></p>
+    </form>
+    <?php
+    }
+}
+else{
+  try {
+    if(!empty($_GET['delete_id'])){delete_user($db, $_GET['delete_id']);}
+    if(!empty($_GET['edit_id']))if(!errors()){edit_user($db, $_GET['edit_id']);}
+    if(isset($_GET['act'])&&$_GET['act']=='add_article'){add_user($db);}
+  }
+  catch(PDOException $e) {
+    echo 'Ошибка: ' . $e->getMessage();
+    exit();
+  }
+  header('Location: admin.php');
+}
