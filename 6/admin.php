@@ -6,8 +6,8 @@ $stmt -> execute([1]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 if (empty($_SERVER['PHP_AUTH_USER']) ||
     empty($_SERVER['PHP_AUTH_PW']) ||
-    $_SERVER['PHP_AUTH_USER'] != $row['login'] ||
-    md5($_SERVER['PHP_AUTH_PW']) != $row['pass']) {
+    $_SERVER['PHP_AUTH_USER'] != 'admin' ||
+    md5($_SERVER['PHP_AUTH_PW']) != '333') {
   header('HTTP/1.1 401 Unanthorized');
   header('WWW-Authenticate: Basic realm="My site"');
   print('<h1>401 Требуется авторизация</h1>');
