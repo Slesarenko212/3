@@ -1,17 +1,25 @@
 <?php
+$db_user = 'u47558';
+$db_pass = '3872701';
+$db = new PDO('mysql:host=localhost;dbname=u47562', $db_user, $db_pass, array(
+    PDO::ATTR_PERSISTENT => true
+));
+$login = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
+$stmt = $db->prepare("SELECT * FROM admin WHERE login = ?");
+      $stmt->execute(array(
+        $login
+      ));
+$admin_pass = $stmt->fetch();
 
-$db = new PDO('mysql:host=localhost;dbname=u47558', 'u47558', '3872701', array(PDO::ATTR_PERSISTENT => true));
-$stmt = $db->prepare("SELECT * FROM admin WHERE id = ?");
-$stmt -> execute([1]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
 if (empty($_SERVER['PHP_AUTH_USER']) ||
-    empty($_SERVER['PHP_AUTH_PW']) ||
-    $_SERVER['PHP_AUTH_USER'] != 'admin' ||
-    md5($_SERVER['PHP_AUTH_PW']) != '333') {
-  header('HTTP/1.1 401 Unanthorized');
-  header('WWW-Authenticate: Basic realm="My site"');
-  print('<h1>401 Требуется авторизация</h1>');
-  exit();
+ empty($_SERVER['PHP_AUTH_PW']) ||
+ $_SERVER['PHP_AUTH_USER'] != 'admin' ||
+ $_SERVER['PHP_AUTH_PW'] != '333') {
+ header('HTTP/1.1 401 Unauthorized');
+ header('WWW-Authenticate: Basic realm="My site"');
+ header('Content-Type: text/html; charset=UTF-8');
+ print '<h1>401 Требуется авторизация</h1>';
+      exit();
 }
 
 // успешно авторизовались и видим защищенные паролем данные
