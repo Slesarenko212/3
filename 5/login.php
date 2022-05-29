@@ -1,57 +1,87 @@
 <?php
 
+/**
+ * Файл login.php для не авторизованного пользователя выводит форму логина.
+ * При отправке формы проверяет логин/пароль и создает сессию,
+ * записывает в нее логин и id пользователя.
+ * После авторизации пользователь перенаправляется на главную страницу
+ * для изменения ранее введенных данных.
+ **/
+
+// Отправляем браузеру правильную кодировку,
+// файл login.php должен быть в кодировке UTF-8 без BOM.
 header('Content-Type: text/html; charset=UTF-8');
 
 session_start();
 
-$db_user = 'u47558';
-$db_pass = '3872701';
+// В суперглобальном массиве $_SESSION хранятся переменные сессии.
+// Будем сохранять туда логин после успешной авторизации.
 
+/*print($_SESSION['login']);
+if (!empty($_SESSION['login'])) {
+  header('Location: index.php');
+}*/
+
+// В суперглобальном массиве $_SERVER PHP сохраняет некторые заголовки запроса HTTP
+// и другие сведения о клиненте и сервере, например метод текущего запроса $_SERVER['REQUEST_METHOD'].
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if(isset($_GET['do'])&&$_GET['do'] == 'logout'){
-    session_start();    
-    session_unset();
-    session_destroy();
-    setcookie ("PHPSESSID", "", time() - 3600, '/');
-    header("Location: index.php");
-    exit;}
+  if (!empty($_SESSION['login'])) {
+  header('Location: index.php');
+  }else{
 ?>
 
 <form action="" method="post">
-  <p><label for="login">Логин </label><input name="login" /></p>
-  <p><label for="pass">Пароль </label><input name="pass" /></p>
+  <label>
+    Логин:<br />
+    <input name="login" />
+  </label><br />
+  <label>
+    Пароль:<br />
+    <input name="pass" />
+  </label><br />
   <input type="submit" value="Войти" />
 </form>
 
 <?php
+  }
 }
+// Иначе, если запрос был методом POST, т.е. нужно сделать авторизацию с записью логина в сессию.
 else {
 
-  $login = $_POST['login'];
-  $pass =  $_POST['pass'];
-
-  $db = new PDO('mysql:host=localhost;dbname=u47558', $db_user, $db_pass, array(
-    PDO::ATTR_PERSISTENT => true
-  ));
-
-  try {
-    $stmt = $db->prepare("SELECT * FROM users5 WHERE login = ?");
-    $stmt->execute(array(
-      $login
-    ));
-    $user = $stmt->fetch();
-    if (password_verify($pass, $user['pass'])) {
-      $_SESSION['login'] = $login;
+  // TODO: Проверть есть ли такой логин и пароль в базе данных.
+  // Выдать сообщение об ошибках.
+  $l=$_POST['login'];
+  $p=$_POST['pass'];
+  $uid=0;
+  $error=TRUE;
+  $user = 'u47558';
+  $pass = '3872701';
+  $db1 = new PDO('mysql:host=localhost;dbname=u47558', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+  if(!empty($l) and !empty($p)){
+    try{
+      $chk=$db1->prepare("select * from username where login=?");
+      $chk->bindParam(1,$l);
+      $chk->execute();
+      $username=$chk->fetchALL();
+      if(password_verify($p,$username[0]['pass'])){
+        $uid=$username[0]['id'];
+        $error=FALSE;
+      }
     }
-    else {
-      echo "Неверный логин или пароль";
+    catch(PDOException $e){
+      print('Error : ' . $e->getMessage());
       exit();
     }
-
   }
-  catch(PDOException $e) {
-    echo 'Ошибка: ' . $e->getMessage();
+  if($error==TRUE){
+    print('Неправильные логин или пароль <br> Если вы хотите создать нового пользователя <a href="index.php">назад</a> или попытайтесь войти снова <a href="login.php">войти</a>');
+    session_destroy();
     exit();
   }
-  header('Location: ./');
+  // Если все ок, то авторизуем пользователя.
+  $_SESSION['login'] = $l;
+  // Записываем ID пользователя.
+  $_SESSION['uid'] = $uid;
+  // Делаем перенаправление.
+  header('Location: index.php');
 }
