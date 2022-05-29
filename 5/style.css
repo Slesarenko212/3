@@ -1,18 +1,18 @@
 
-  .error {
-    border: 5px solid red;
-    border-radius: 5px;
-    margin-bottom: 1px;
-    }
+.error {
+  border: 5px solid red;
+  border-radius: 5px;
+  margin-bottom: 1px;
+}
 
-
-#form{
+.form{
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
   border: 2px solid yellow;
   width: 200px;
 }
+
 input[type=text] {
   padding:8px;
   margin:5px 0;
@@ -36,7 +36,7 @@ input[type="checkbox"]:checked + span { background: green; }
 
 span { padding: 0 5px; }
 
-button[type=submit] {
+input [type=submit] {
   background-color: yellow;
   color: black;
   padding:8px;
@@ -44,11 +44,6 @@ button[type=submit] {
   border-radius: 19px;
   cursor: pointer;
   text-align: center;
-}
-
-.error {
-  border: 2px solid red;
-  margin: 5px;
 }
 
 .error_check {
