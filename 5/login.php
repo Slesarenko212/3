@@ -33,11 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <form action="" method="post">
   <label>
     Логин:<br />
-    <input name="login" />
+    <input name="login" /><br />
   </label><br />
   <label>
     Пароль:<br />
-    <input name="pass" />
+    <input name="pass" /><br />
   </label><br />
   <input type="submit" value="Войти" />
 </form>
@@ -74,7 +74,7 @@ else {
     }
   }
   if($error==TRUE){
-    print('Неправильные логин или пароль <br> Если вы хотите создать нового пользователя <a href="index.php">назад</a> или попытайтесь войти снова <a href="login.php">войти</a>');
+    print('Неправильные логин или пароль <br> Если Вы хотите создать новый аккаунт, вернитесь <a href="index.php">назад</a> или попытайтесь <a href="login.php">войти</a> снова');
     session_destroy();
     exit();
   }
