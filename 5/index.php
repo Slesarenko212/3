@@ -17,11 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     setcookie('login', '', 100000);
     setcookie('pass_in', '', 100000);
     // Выводим сообщение пользователю.
-    $messages[] = 'Спасибо, результаты сохранены.';
+    $messages[] = 'Спасибо, информация сохранена.';
     // Если в куках есть пароль, то выводим сообщение.
     if (!empty($_COOKIE['pass_in'])) {
       $messages[] = sprintf('Вы можете <a href="login.php">войти</a> с логином <strong>%s</strong>
-        и паролем <strong>%s</strong> для изменения данных.',
+        и паролем <strong>%s</strong>',
         strip_tags($_COOKIE['login']),
         strip_tags($_COOKIE['pass_in']));
     }
@@ -49,37 +49,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $errors_ar['privacy'] = !empty($_COOKIE['privacy_error']);
   if (!empty($errors_ar['fio'])) {
     setcookie('fio_error', '', 100000);
-    $messages[] = '<div class="error">Вы не заполнили имя!</div>';
+    $messages[] = '<div class="error">Заполните имя</div>';
     $error=TRUE;
   }
   if ($errors_ar['mail']) {
     setcookie('mail_error', '', 100000);
-    $messages[] = '<div class="error">Вы не заполнили e-mail!</div>';
+    $messages[] = '<div class="error">Заполните e-mail</div>';
     $error=TRUE;
   }
   if ($errors_ar['year']) {
     setcookie('year_error', '', 100000);
-    $messages[] = '<div class="error">Вы не выбрали год!</div>';
+    $messages[] = '<div class="error">Выберите год</div>';
     $error=TRUE;
   }
   if ($errors_ar['sex']) {
     setcookie('sex_error', '', 100000);
-    $messages[] = '<div class="error">Вы не указали пол!</div>';
+    $messages[] = '<div class="error">Укажите пол</div>';
     $error=TRUE;
   }
   if ($errors_ar['limb']) {
     setcookie('limb_error', '', 100000);
-    $messages[] = '<div class="error">Вы не указали количество конечностей!</div>';
+    $messages[] = '<div class="error">Укажите количество конечностей</div>';
     $error=TRUE;
   }
   if ($errors_ar['powers']) {
     setcookie('powers_error', '', 100000);
-    $messages[] = '<div class="error">Вы не указали сверхспособности!</div>';
+    $messages[] = '<div class="error">Укажите сверхспособности</div>';
     $error=TRUE;
   }
   if ($errors_ar['privacy']) {
     setcookie('privacy_error', '', 100000);
-    $messages[] = '<div class="error">Вы не согласились с политикой конфиденциальности!</div>';
+    $messages[] = '<div class="error">Подтвердите ознакомление с контрактом</div>';
     $error=TRUE;
   }
   // Складываем предыдущие значения полей в массив, если есть.
