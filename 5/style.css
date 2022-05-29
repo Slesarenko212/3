@@ -3,6 +3,7 @@
   margin-right: auto;
   padding: 20px;
   border: 2px solid yellow;
+  width: 200px;
 }
 input[type=text] {
   padding:8px;
@@ -23,7 +24,7 @@ textarea {
   height:100px;
 }
 
-input[type="checkbox"]:checked + span { background: #fc0; }
+input[type="checkbox"]:checked + span { background: green; }
 
 span { padding: 0 5px; }
 
@@ -34,6 +35,7 @@ button[type=submit] {
   margin:5px 0;
   border-radius: 19px;
   cursor: pointer;
+  text-align: center;
 }
 
 .error {
