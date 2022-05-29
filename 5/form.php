@@ -4,7 +4,7 @@
 
   <head>
     <meta charset="UTF-8">
-    <title>Задание 5</title>
+    <title>Слесаренко 21/2 (№5)</title>
     <link rel="stylesheet" href="style.css" />
   </head>
 <body>
@@ -35,7 +35,7 @@ if (!empty($messages)) {
         <select name="year" <?php if ($errors_ar['year']) {print 'class="error"';} ?>>
             <option value="Выбрать">Выбрать</option>
             <?php
-                for($i=2004;$i>=1900;$i--){
+                for($i=2010;$i>=1900;$i--){
                     if($values['year']==$i){
                         printf("<option value=%d selected>%d год</option>",$i,$i);
                     }
@@ -92,7 +92,7 @@ if (!empty($messages)) {
   if(empty($_SESSION['login'])){
    echo'
    <div class="login">
-    <p>Если у вас есть аккаунт, вы можете <a href="login.php">войти</a></p>
+    <p>У Вас уже есть аккаунт? <a href="login.php">Войти</a></p>
    </div>';
   }
   else{
