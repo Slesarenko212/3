@@ -1,70 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+
+<html lang="ru">
+
+  <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Слесаренко 21/2</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <?php
-  if (!empty($messages)) {
-    print('<div class="messages">');
-    // Выводим все сообщения.
-    foreach ($messages as $message) {
-      print($message);
-    }
-    print('</div>');
-  }
-  // Далее выводим форму отмечая элементы с ошибками классом error
-  // и задавая начальные значения элементов ранее сохраненными.
-  ?>
-  <div class="container">
-    <h2>
-        Контактная форма
-    </h2>
-    <form action="" method="POST">
-      Имя:<br><input type="text" name="name" <?php if ($errors['name']) {print 'class="group error"';} else print 'class="group"'; ?> value="<?php print $values['name']; ?>">
-      <br>
-      E-mail:<br><input type="text" name="email" <?php if ($errors['email']) {print 'class="group error';} else print 'class="group"'; ?> value="<?php print $values['email']; ?>">
-      <br>
-      <div class="form-group">
-<legend for="year"class="group" style="color: white;">Дата рождения:</legend>
-<input type="date" id="year" size="3" name="year" <?php if ($errors['year']) {print 'class="group error"';} else print 'class="group"';?> value="<?php print $values['year']; ?>">
-</div>
-      <div <?php if ($errors['gender']) {print 'class="error"';} ?>>
-        Пол:<br>
-        <input class="radio" type="radio" name="gender" value="M" <?php if ($values['gender'] == 'M') {print 'checked';} ?>> Мужской
-        <input class="radio" type="radio" name="gender" value="W" <?php if ($values['gender'] == 'W') {print 'checked';} ?>> Женский
-      </div>
-      <div <?php if ($errors['limbs']) {print 'class="error"';} ?>>
-        Количество конечностей:<br>
-        <input class="radio" type="radio" name="limbs" value="4" <?php if ($values['limbs'] == '4') {print 'checked';} ?>> 4
-        <input class="radio" type="radio" name="limbs" value="3" <?php if ($values['limbs'] == '3') {print 'checked';} ?>> 3
-        <input class="radio" type="radio" name="limbs" value="2" <?php if ($values['limbs'] == '2') {print 'checked';} ?>> 2
-        <input class="radio" type="radio" name="limbs" value="1" <?php if ($values['limbs'] == '1') {print 'checked';} ?>> 1
-        <input class="radio" type="radio" name="limbs" value="0" <?php if ($values['limbs'] == '0') {print 'checked';} ?>> 0 
-      </div>
-      Cверхспособности:<br>
-      <select class="group" name="ability[]" size="3" multiple>
-          <option value="Бессмертие" <?php if (in_array("Бессмертие", $values['ability'])) {print 'selected';} ?>>Бессмертие</option>
-          <option value="Прохождение сквозь стены" <?php if (in_array("Прохождение сквозь стены", $values['ability'])) {print 'selected';} ?>>Прохождение сквозь стены</option>
-          <option value="Левитация" <?php if (in_array("Левитация", $values['ability'])) {print 'selected';} ?>>Левитация</option>
-      </select>
-      <br>
-      Биография:<br><textarea class="group" name="bio" rows="3" cols="30"><?php print $values['bio']; ?></textarea>
-      <div  <?php if ($errors['checkbox']) {print 'class="error"';} ?>>
-        <input type="checkbox" name="checkbox" <?php if ($values['checkbox']) {print 'checked';} ?>> С контрактом ознакомлен(a) 
-      </div>
-      <input type="submit" id="send" value="ОТПРАВИТЬ">
+    <title>Задание 5</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+  <?php 
+		if (!empty($messages)) {
+			if(isset($messages['save'])) print('<div id="messages" class="ok">'); else print('<div id="messages">');
+			foreach ($messages as $message) {
+				print($message);
+			}
+		  print('</div>');
+		}
+	?>
+   <div id="form">
+    	<h1><b>Форма</b></h1>
+	<form action="" method="POST">
+	
+      <label for="name"></label>
+        <b>Введите имя:</b><br />
+        <input type="text" name="name" <?php if (!empty($errors['name'])) {print 'class="error"';} ?> <?php if(empty($errors['name'])&&!empty($values['name'])) print 'class="ok"';?> value="<?php isset($_COOKIE['name_error'])? print trim($_COOKIE['name_error']) : print $values['name']; ?>">
+      <br />
+	  
+      <label for="email"></label>
+        <b>Введите свой email:</b><br />
+        <input type="text" id="email" name="email" <?php if(!empty($errors['email']))  print 'class="error"';?> <?php if(empty($errors['email'])&&!empty($values['email'])) print 'class="ok"';?> value="<?php isset($_COOKIE['email_error'])? print trim($_COOKIE['email_error']) : print $values['email']; ?>">
+      <br />
+	  
+      <label for="date"><b>Дата рождения:</b></label><br />
+        <input type="date" id="date" name="date" <?php if(!empty($errors['date']))  print 'class="error"';?> <?php if(empty($errors['date'])&&!empty($values['date'])) print 'class="ok"';?> value="<?php isset($_COOKIE['date_error'])? print trim($_COOKIE['date_error']) : print $values['date']; ?>">
+      <br />
+	  
+	  <label <?php if(!empty($errors['pol'])) print 'class="error_check"'?>>
+      <b>Пол:</b></label><br />
+      <input type="radio" id="male"name="pol" value="male" <?php if (isset($values['pol'])&&$values['pol'] == 'male') print("checked"); ?>>мужской
+      <input type="radio" id="female" name="pol" value="female" <?php if (isset($values['pol'])&&$values['pol'] == 'female') print("checked"); ?>>женский<br />
+	  
+	  <label <?php if(isset($_COOKIE['konechn_error'])) print 'class="error_check"'?>><b>Количество конечностей:</b></label><br />
+      <input type="radio" id="1" name="konechn" value="1" <?php if (isset($values['konechn'])&&$values['konechn'] == '1') print("checked"); ?>>1
+	  <input type="radio" id="2" name="konechn" value="2" <?php if (isset($values['konechn'])&&$values['konechn'] == '2') print("checked"); ?>>2
+	  <input type="radio" id="3" name="konechn" value="3" <?php if (isset($values['konechn'])&&$values['konechn'] == '3') print("checked"); ?>>3
+      <input type="radio" id="4" name="konechn" value="4" <?php if (isset($values['konechn'])&&$values['konechn'] == '4') print("checked"); ?>>4<br />	
+	  
+	  <b>Сверхспособности:</b><br />
+      <label><select name="super[]" multiple="multiple" <?php if (!empty($errors['super'])) print 'class="error"';?>>
         <?php
-      if (!empty($_COOKIE[session_name()]) && !empty($_SESSION['login']))
-        print('<a href="login.php" class = "enter-exit" title = "Log out">Выйти</a>');
-      else
-        print('<a href="login.php" class = "enter-exit"  title = "Log in">Войти</a>');
-    ?>
+				$sql = 'SELECT * FROM SuperDef';
+				foreach ($db->query($sql) as $row) {
+					?><option value=<?php print $row['id']?> name=super[] <?php if(isset($values['super'][$row['id']])&&empty($_COOKIE['super_error']))print("checked"); print "\t"; ?>>
+					<?php print $row['name'] . "\t";
+				}
+			?></option>
+		</select>
+      </label><br />
+	  
+	  <label for="info"><b>Биография:</b></label><br />
+        <textarea id="info" name="info" <?php if(!empty($errors['info']))  print 'class="error"';?> <?php if(empty($errors['info'])&&!empty($values['info'])) print 'class="ok"';?>><?php isset($_COOKIE['info_error']) ? print trim($_COOKIE['info_error']) : print $values['info'] ?></textarea>
+      <br />
+	  
+	  <label <?php if(!empty($errors['check1'])) print 'class="error_check"'?>><b>С контрактом ознакомлен (а)</b></label>
+      <input type="checkbox" id="check1" name="check1" value="check1" <?php if (isset($values['check1'])&&$values['check1'] == 'check1') print("checked"); ?>><br />
+	  
+      <p><button type="submit" value="send">Отправить</p>
     </form>
-  </div>
-</body>
+	<?php if(!empty($_COOKIE[session_name()]) && !empty($_SESSION['login'])) print( '<div id="footer">Вход ' . $_SESSION["login"]. '<br> <a href=login.php?do=logout> Выход</a><br></div>');?>
+    </div>
+  </body>
 </html>
